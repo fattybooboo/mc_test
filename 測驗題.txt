@@ -1,0 +1,244 @@
+這是一份整理好的 Markdown 檔案內容。您可以直接將下方區塊內的文字複製，儲存為 `README.md` 或任何您方便閱讀的文檔。
+
+---
+
+# 攻城奇兵：麥塊風格知識挑戰賽 專案說明書
+
+這份文件包含了專案的設計邏輯、完整的 HTML 程式碼範例以及題目對照表。您可以利用此文件快速部署一個專屬的網頁測驗。
+
+## 一、 測驗題目設計對照
+
+本測驗共 10 題，完全針對「攻城奇兵科學營」的課程內容設計，並結合 Minecraft (麥塊) 的遊戲語彙：
+
+| 題號 | 主題分類 | 核心知識點 | 麥塊風格評語 (Note) |
+| --- | --- | --- | --- |
+| **Q1** | **新手村** | 課程主軸：戰國弩與投石機 | 我們是攻城奇兵，不是星際大戰喔！ |
+| **Q2** | **合成表知識** | 弩的核心零件：弩機 (Trigger Mechanism) | 弩機包含望山、懸刀，可以瞄準更久。 |
+| **Q3** | **物理引擎** | 能量來源：彈性位能 (Elastic Potential) | 就像拉橡皮筋，弓臂儲存了能量！ |
+| **Q4** | **歷史知識** | 投石機別稱：回回炮 / 襄陽炮 | 這種配重式投石機威力強大，能砸毀城牆。 |
+| **Q5** | **物理引擎** | 科學原理：槓桿原理 (Lever) | 利用長短臂差異，將力量放大拋射。 |
+| **Q6** | **構造細節** | 關鍵構造：配重物 (Counterweight) | 配重掉落的位能會轉換成拋射動能！ |
+| **Q7** | **戰術分析** | 武器特性：單兵靈活性 (戰國弩) | 戰國弩體積小，士兵可以抱著跑。 |
+| **Q8** | **實作題** | 城牆活動：結構穩固與團隊合作 | 有限資源蓋出最穩牆面，需要團隊智慧。 |
+| **Q9** | **科技應用** | 現代工具：生成式 AI 戰術模擬 | 用 AI 幫我們推演戰術，看看誰最聰明。 |
+| **Q10** | **安全守則** | 實驗安全：使用吸盤軟子彈 | 安全第一！絕對不能對著人射擊。 |
+
+---
+
+## 二、 完整 HTML 程式碼範例 (`index.html`)
+
+請複製以下程式碼並儲存為 `index.html`。
+
+```html
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>攻城奇兵：麥塊大挑戰</title>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mc-green: #56ae35;
+            --mc-dirt: #8b5a2b;
+            --mc-stone: #7d7d7d;
+            --mc-btn-shadow: #3b7a24;
+            --mc-text: #ffffff;
+        }
+
+        body {
+            font-family: 'DotGothic16', sans-serif;
+            background-color: #1a1a1a;
+            background-image: linear-gradient(135deg, #1a1a1a 25%, #2a2a2a 25%, #2a2a2a 50%, #1a1a1a 50%, #1a1a1a 75%, #2a2a2a 75%, #2a2a2a 100%);
+            background-size: 40px 40px;
+            color: var(--mc-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .game-container {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 4px solid var(--mc-stone);
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            box-shadow: 0 10px 0 #000;
+            text-align: center;
+        }
+
+        h1 {
+            color: #fca800;
+            text-shadow: 4px 4px #3f2832;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .question-box {
+            background-color: var(--mc-stone);
+            border: 4px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-align: left;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background-color: var(--mc-stone);
+            border: none;
+            border-bottom: 6px solid #444;
+            color: white;
+            padding: 15px;
+            font-family: 'DotGothic16', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+            text-align: left;
+        }
+
+        .option-btn:active {
+            transform: translateY(4px);
+            border-bottom: 2px solid #444;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #333;
+            margin-bottom: 20px;
+            border: 2px solid white;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--mc-green);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .feedback-text {
+            color: #fca800;
+            margin-top: 15px;
+            min-height: 25px;
+        }
+
+        .correct { background-color: var(--mc-green) !important; border-bottom-color: var(--mc-btn-shadow) !important; }
+        .wrong { background-color: #cc3333 !important; border-bottom-color: #880000 !important; }
+        
+        #next-btn {
+            background-color: var(--mc-green);
+            border-bottom: 6px solid var(--mc-btn-shadow);
+            margin-top: 20px;
+            display: none;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>攻城奇兵試煉</h1>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <div id="quiz-area">
+        <div class="question-box" id="question-text">載入中...</div>
+        <div class="options-grid" id="options-container"></div>
+        <div class="feedback-text" id="feedback"></div>
+        <button class="option-btn" id="next-btn" onclick="nextQuestion()">下一關 (Next Level)</button>
+    </div>
+
+    <div id="result-area" style="display:none;">
+        <h2>冒險結束！</h2>
+        <div style="font-size: 3rem; color: #56ae35;" id="final-score">0</div>
+        <p id="comment"></p>
+        <button class="option-btn" onclick="location.reload()" style="background-color: var(--mc-dirt); width: 100%;">重新挑戰</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "【新手村】營隊主要學習製作哪兩種古代兵器？", options: ["戰國弩 & 投石機", "坦克車 & 飛機", "雷射槍 & 光劍"], a: 0, note: "沒錯！我們是攻城奇兵！" },
+        { q: "【合成表知識】戰國弩扣住弦的核心零件叫做？", options: ["發射器", "弩機 (Trigger)", "紅石中繼器"], a: 1, note: "弩機包含望山、懸刀。" },
+        { q: "【物理引擎】戰國弩發射的力量來源是什麼？", options: ["火藥爆炸", "弓臂變形後的彈性位能", "電磁力"], a: 1, note: "弓臂儲存了強大的能量！" },
+        { q: "【歷史知識】投石機在攻打襄陽城時有什麼稱號？", options: ["襄陽炮 / 回回炮", "神威大砲", "巨型TNT"], a: 0, note: "這是歷史上非常有名的巨炮。" },
+        { q: "【物理引擎】投石機是利用什麼科學原理？", options: ["槓桿原理", "浮力原理", "萬有引力"], a: 0, note: "利用槓桿平衡來拋射物品。" },
+        { q: "【構造細節】投石機短邊掛的重物功能是？", options: ["裝飾用", "配重物 (Counterweight)", "裝午餐"], a: 1, note: "配重是能量轉換的關鍵！" },
+        { q: "【戰術分析】若要單兵作戰靈活移動，首選武器是？", options: ["投石機", "戰國弩", "蓋城牆"], a: 1, note: "戰國弩可以隨身攜帶。" },
+        { q: "【實作題】蓋城牆活動（3x4 規格）主要考驗？", options: ["運氣", "團隊合作與結構穩固", "積木數量"], a: 1, note: "結構穩固是工程師的核心。" },
+        { q: "【科技應用】除了木工，我們還用什麼模擬戰局？", options: ["生成式 AI", "VR 眼鏡", "無人機"], a: 0, note: "AI 是現代最強的戰術顧問。" },
+        { q: "【安全守則】教室試射時使用的子彈是？", options: ["鐵箭", "吸盤式軟子彈", "火球"], a: 1, note: "安全第一，不可對人射擊。" }
+    ];
+
+    let currentQ = 0, score = 0;
+
+    function loadQuestion() {
+        if (currentQ >= questions.length) { showResult(); return; }
+        document.getElementById('progress').style.width = (currentQ / questions.length * 100) + '%';
+        const qData = questions[currentQ];
+        document.getElementById('question-text').innerText = `Q${currentQ + 1}: ${qData.q}`;
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        qData.options.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => check(i, btn);
+            container.appendChild(btn);
+        });
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('feedback').innerText = '';
+    }
+
+    function check(idx, btn) {
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(b => b.disabled = true);
+        if (idx === questions[currentQ].a) {
+            btn.classList.add('correct');
+            score += 10;
+            document.getElementById('feedback').innerText = "★ 正確！" + questions[currentQ].note;
+        } else {
+            btn.classList.add('wrong');
+            btns[questions[currentQ].a].classList.add('correct');
+            document.getElementById('feedback').innerText = "💀 答錯了！" + questions[currentQ].note;
+        }
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() { currentQ++; loadQuestion(); }
+
+    function showResult() {
+        document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('result-area').style.display = 'block';
+        document.getElementById('final-score').innerText = score;
+        const cmnt = document.getElementById('comment');
+        if (score === 100) cmnt.innerText = "太神啦！你是傳說中的攻城大師！";
+        else if (score >= 60) cmnt.innerText = "不錯喔！你具備了工程師的資質！";
+        else cmnt.innerText = "再接再厲，回新手村翻翻合成表吧！";
+    }
+
+    loadQuestion();
+</script>
+</body>
+</html>
+
+```
+
+---
+
+## 三、 快速部署指南
+
+1. **儲存檔案**：將上述程式碼儲存為 `index.html`。
+2. **上傳 GitHub**：建立一個新 Repository (例如 `siege-quiz`)，並將檔案上傳。
+3. **開啟 Pages**：在 `Settings` -> `Pages` 選擇 `main` 分頁並儲存。
+4. **分享成果**：將產生的網址轉成 QR Code，即可讓學生掃描遊玩！
+
+---
+
+如果您需要修改題目順序或調整難度，只需編輯程式碼中 `const questions` 的陣列內容即可。祝您的科學營成果展圓滿成功！
