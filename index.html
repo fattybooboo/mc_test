@@ -165,7 +165,7 @@
     }
 
     function check(idx, btn) {
-        const btns = document.querySelectorAll('.option-btn');
+        const btns = document.querySelectorAll('#options-container .option-btn');
         btns.forEach(b => b.disabled = true);
         if (idx === questions[currentQ].a) {
             btn.classList.add('correct');
